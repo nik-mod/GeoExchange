@@ -1,0 +1,90 @@
+/* GeoExchange — custom styles */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overscroll-behavior: none;
+}
+
+main > :first-child {
+  margin-top: 0 !important;
+}
+
+main > :last-child {
+  margin-bottom: 0 !important;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Utility used by ticker / bank search rows to hide scrollbars while staying scrollable */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Chart line draw-in */
+#chart-line-path {
+  transition: d 0.5s ease;
+}
+#chart-area-path {
+  transition: d 0.5s ease;
+}
+
+/* Anchor targets sit under the fixed header + live ticker */
+#live-rates,
+#converter,
+#bank-comparison,
+#analytics,
+#branches {
+  scroll-margin-top: 96px;
+}
+
+/* Scroll-reveal: elements fade + rise into place as they enter the viewport */
+.reveal-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Ticker value flash when a fresh rate lands */
+.value-flash {
+  animation: valueFlash 0.9s ease;
+}
+@keyframes valueFlash {
+  0% { color: #4edea3; text-shadow: 0 0 12px rgba(78, 222, 163, 0.6); }
+  100% { color: inherit; text-shadow: none; }
+}
+
+/* Animated counter cards on the hero */
+.stat-pop {
+  animation: statPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes statPop {
+  0% { transform: scale(0.94); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
+}
