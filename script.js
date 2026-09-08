@@ -4,8 +4,8 @@
 //   Crypto price: CoinLore public API (no auth)
 // ===================================================================
 
-const NBG_API = "https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/en/json";
-const CRYPTO_API = "https://api.coinlore.net/api/tickers/?start=0&limit=5";
+const NBG_API = "https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/en/json/";
+const CRYPTO_API = "https://api.coinlore.net/api/ticker/?id=90";
 const REFRESH_MS = 60000; // matches the "60 წამი" claim on the page
 
 let nbgRates = {}; // { USD: { perUnit, diffPerUnit, name }, ... }
@@ -30,7 +30,6 @@ function fmt(n, maxDigits = 4) {
 function flash(el) {
   if (!el) return;
   el.classList.remove("value-flash");
-  // restart the animation even if it's already mid-flight
   void el.offsetWidth;
   el.classList.add("value-flash");
 }
@@ -39,9 +38,17 @@ function flash(el) {
 // 1. Fetch live NBG fiat rates (fetch + async/await)
 // ---------------------------------------------------------------
 async function loadNbgRates(dateStr) {
-  const url = dateStr ? `${NBG_API}/?date=${dateStr}` : NBG_API;
-  const res = await fetch(url);
+  const url = new URL(NBG_API);
+  if (dateStr) url.searchParams.set("date", dateStr);
+
+  const res = await fetch(url.toString(), { cache: "no-store" });
+  if (!res.ok) throw new Error(`NBG request failed: ${res.status}`);
+
   const data = await res.json();
+  if (!Array.isArray(data) || !data[0] || !Array.isArray(data[0].currencies)) {
+    throw new Error("Unexpected NBG response format");
+  }
+
   const day = data[0];
   const map = {};
   map.GEL = { perUnit: 1, diffPerUnit: 0, name: "Georgian Lari", date: day.date };
@@ -60,7 +67,8 @@ async function refreshLiveRates() {
   try {
     nbgRates = await loadNbgRates();
     updateTickerFromNbg();
-    convertCurrency();
+    convertCurrency(false);
+    updateBankRates(selectedBankCurrency);
     updateHeroStatus(true);
   } catch (err) {
     console.error("NBG rate fetch failed:", err);
@@ -120,15 +128,17 @@ function updateTickerFromNbg() {
 }
 
 // ---------------------------------------------------------------
-// 2. Fetch live BTC/USD (fetch + async/await)
+// 2. Fetch live BTC/USD
 // ---------------------------------------------------------------
 async function refreshCrypto() {
   const valueNode = document.getElementById("ticker-btc-value");
   const diffNode = document.getElementById("ticker-btc-diff");
   try {
-    const res = await fetch(CRYPTO_API);
+    const res = await fetch(CRYPTO_API, { cache: "no-store" });
+    if (!res.ok) throw new Error(`CoinLore request failed: ${res.status}`);
     const data = await res.json();
-    btcData = data.data.find((c) => c.symbol === "BTC") || data.data[0];
+    if (!Array.isArray(data) || !data[0]) throw new Error("Unexpected CoinLore response format");
+    btcData = data[0];
     const price = parseFloat(btcData.price_usd);
     const change = parseFloat(btcData.percent_change_24h);
     if (valueNode) {
@@ -143,9 +153,50 @@ async function refreshCrypto() {
 }
 
 // ---------------------------------------------------------------
-// 3. Converter — built entirely on live NBG rates
+// 3. Converter & Conversion History (localStorage)
 // ---------------------------------------------------------------
-function convertCurrency() {
+let conversionHistory = [];
+try {
+  const storedHistory = JSON.parse(localStorage.getItem("geoexchange_history") || "[]");
+  conversionHistory = Array.isArray(storedHistory) ? storedHistory : [];
+} catch {
+  conversionHistory = [];
+}
+
+function saveConversionToHistory(amount, fromCode, result, toCode) {
+  const item = {
+    amount,
+    fromCode,
+    result: fmt(result),
+    toCode,
+    time: new Date().toLocaleTimeString("ka-GE", { hour: "2-digit", minute: "2-digit" })
+  };
+  // Avoid duplicate adjacent entries
+  if (conversionHistory.length > 0 && conversionHistory[0].amount === amount && conversionHistory[0].fromCode === fromCode && conversionHistory[0].toCode === toCode) {
+    return;
+  }
+  conversionHistory.unshift(item);
+  if (conversionHistory.length > 5) conversionHistory.pop();
+  localStorage.setItem("geoexchange_history", JSON.stringify(conversionHistory));
+  renderConversionHistory();
+}
+
+function renderConversionHistory() {
+  const listEl = document.getElementById("conversion-history-list");
+  if (!listEl) return;
+  if (conversionHistory.length === 0) {
+    listEl.innerHTML = `<span class="text-body-sm text-on-surface-variant italic">ისტორია ცარიელია...</span>`;
+    return;
+  }
+  listEl.innerHTML = conversionHistory.map((h, idx) => `
+    <div class="flex items-center justify-between bg-surface-container p-2 rounded-lg text-body-sm">
+      <span class="text-on-surface font-label-numeric">${h.amount} ${h.fromCode} → ${h.result} ${h.toCode}</span>
+      <span class="text-on-surface-variant text-xs">${h.time}</span>
+    </div>
+  `).join("");
+}
+
+function convertCurrency(saveHistory = false) {
   const fromInput = document.getElementById("input-amount");
   const fromSelect = document.getElementById("select-from");
   const toSelect = document.getElementById("select-to");
@@ -179,6 +230,12 @@ function convertCurrency() {
   if (rateIndicator) {
     rateIndicator.textContent = `1 ${fromCode} = ${fmt(unitRate)} ${toCode} · NBG`;
   }
+
+  triggerResultPop();
+
+  if (saveHistory && amount > 0) {
+    saveConversionToHistory(amount, fromCode, result, toCode);
+  }
 }
 
 function setupConverter() {
@@ -186,17 +243,33 @@ function setupConverter() {
   const fromSelect = document.getElementById("select-from");
   const toSelect = document.getElementById("select-to");
   const swapBtn = document.getElementById("btn-swap-currencies");
+  const clearHistoryBtn = document.getElementById("clear-history-btn");
 
-  if (fromInput) fromInput.addEventListener("input", convertCurrency);
-  if (fromSelect) fromSelect.addEventListener("change", convertCurrency);
-  if (toSelect) toSelect.addEventListener("change", convertCurrency);
+  let historyTimer;
+  const handleInput = () => {
+    convertCurrency(false);
+    clearTimeout(historyTimer);
+    historyTimer = setTimeout(() => convertCurrency(true), 700);
+  };
+
+  if (fromInput) fromInput.addEventListener("input", handleInput);
+  if (fromSelect) fromSelect.addEventListener("change", () => convertCurrency(true));
+  if (toSelect) toSelect.addEventListener("change", () => convertCurrency(true));
 
   if (swapBtn) {
     swapBtn.addEventListener("click", () => {
       const temp = fromSelect.value;
       fromSelect.value = toSelect.value;
       toSelect.value = temp;
-      convertCurrency();
+      convertCurrency(true);
+    });
+  }
+
+  if (clearHistoryBtn) {
+    clearHistoryBtn.addEventListener("click", () => {
+      conversionHistory = [];
+      localStorage.removeItem("geoexchange_history");
+      renderConversionHistory();
     });
   }
 
@@ -205,16 +278,22 @@ function setupConverter() {
       const val = this.getAttribute("data-val");
       if (fromInput && val) {
         fromInput.value = val;
-        convertCurrency();
+        convertCurrency(true);
       }
     });
   });
+
+  renderConversionHistory();
 }
 
 // ---------------------------------------------------------------
-// 4. Bank comparison — illustrative margins layered on the real NBG rate
+// 4. Bank comparison & Branch search
 // ---------------------------------------------------------------
+let selectedBankCurrency = "USD";
+
 function updateBankRates(currCode) {
+  selectedBankCurrency = currCode || selectedBankCurrency;
+  currCode = selectedBankCurrency;
   const rate = nbgRates[currCode];
   const rows = document.querySelectorAll(".bank-row");
   if (!rate) return;
@@ -256,10 +335,21 @@ function setupBankTabs() {
       });
     });
   }
+
+  const branchSearchInput = document.getElementById("branch-search-input");
+  if (branchSearchInput) {
+    branchSearchInput.addEventListener("keyup", function() {
+      const query = this.value.toLowerCase().trim();
+      document.querySelectorAll(".branch-card").forEach((card) => {
+        const name = card.getAttribute("data-name").toLowerCase();
+        card.style.display = name.includes(query) ? "" : "none";
+      });
+    });
+  }
 }
 
 // ---------------------------------------------------------------
-// 5. Historical chart — real NBG rates sampled across the last 30 days
+// 5. Historical chart
 // ---------------------------------------------------------------
 function isoDateMinusDays(days) {
   const d = new Date();
@@ -270,7 +360,7 @@ function isoDateMinusDays(days) {
 let currentChartDays = 30;
 
 function sampleOffsetsForRange(days) {
-  const steps = days <= 7 ? days : 7; // always 8 data points, spread across the range
+  const steps = days <= 7 ? days : 7;
   const offsets = [];
   for (let i = steps; i >= 0; i--) {
     offsets.push(Math.round((i / steps) * days));
@@ -295,6 +385,7 @@ async function loadHistoricalChart(days = currentChartDays) {
     if (points.length < 2) return;
 
     drawTrendChart(points);
+    triggerChartAnimation();
   } catch (err) {
     console.error("Historical chart fetch failed:", err);
   } finally {
@@ -358,8 +449,36 @@ function drawTrendChart(points) {
 }
 
 // ---------------------------------------------------------------
-// 5b. Scroll-spy navigation + on-scroll reveal animations
+// 6. FAQ Accordion & Chrome UI
 // ---------------------------------------------------------------
+function setupFaq() {
+  document.querySelectorAll(".faq-item").forEach((item, index) => {
+    item.setAttribute("role", "button");
+    item.setAttribute("tabindex", "0");
+    item.setAttribute("aria-expanded", "false");
+
+    const toggle = () => {
+      const content = item.querySelector(".faq-content");
+      const icon = item.querySelector(".material-symbols-outlined");
+      if (content) {
+        content.classList.toggle("hidden");
+        if (icon) {
+          icon.style.transform = content.classList.contains("hidden") ? "rotate(0deg)" : "rotate(180deg)";
+        }
+        item.setAttribute("aria-expanded", String(!content.classList.contains("hidden")));
+      }
+    };
+
+    item.addEventListener("click", toggle);
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggle();
+      }
+    });
+  });
+}
+
 function setupScrollSpy() {
   const navGroups = document.querySelectorAll("nav[data-active-classes]");
   if (!navGroups.length) return;
@@ -377,7 +496,7 @@ function setupScrollSpy() {
     });
   };
 
-  const sections = ["live-rates", "converter", "bank-comparison", "analytics", "branches"]
+  const sections = ["live-rates", "converter", "bank-comparison", "analytics", "faq", "branches"]
     .map((id) => document.getElementById(id))
     .filter(Boolean);
 
@@ -408,16 +527,21 @@ function setupRevealAnimations() {
   cards.forEach((card) => observer.observe(card));
 }
 
-// ---------------------------------------------------------------
-// 6. Chrome: mobile menu, back-to-top, cookie banner, subscribe form
-// ---------------------------------------------------------------
 function setupChrome() {
   const menuBtn = document.getElementById("mobile-menu-btn");
   const drawer = document.getElementById("mobile-nav-drawer");
   if (menuBtn && drawer) {
-    menuBtn.addEventListener("click", () => drawer.classList.toggle("hidden"));
+    const setDrawerState = (open) => {
+      drawer.classList.toggle("hidden", !open);
+      drawer.setAttribute("aria-hidden", String(!open));
+      menuBtn.setAttribute("aria-expanded", String(open));
+      const icon = menuBtn.querySelector(".material-symbols-outlined");
+      if (icon) icon.textContent = open ? "close" : "menu";
+    };
+
+    menuBtn.addEventListener("click", () => setDrawerState(drawer.classList.contains("hidden")));
     drawer.querySelectorAll("a[data-path]").forEach((link) => {
-      link.addEventListener("click", () => drawer.classList.add("hidden"));
+      link.addEventListener("click", () => setDrawerState(false));
     });
   }
 
@@ -457,14 +581,14 @@ function setupChrome() {
     subForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const input = document.getElementById("sub-email-input");
-      if (input && input.value) {
+      if (input && input.checkValidity() && input.value.trim()) {
+        localStorage.setItem("geoexchange_subscription_email", input.value.trim());
         subBtn.disabled = true;
-        subBtn.textContent = "მუშავდება...";
-        setTimeout(() => {
-          subBtn.classList.add("hidden");
-          input.disabled = true;
-          subSuccess.classList.remove("hidden");
-        }, 400);
+        subBtn.classList.add("hidden");
+        input.disabled = true;
+        subSuccess.classList.remove("hidden");
+      } else if (input) {
+        input.reportValidity();
       }
     });
   }
@@ -477,14 +601,36 @@ document.addEventListener("DOMContentLoaded", () => {
   setupConverter();
   setupBankTabs();
   setupChartTimeframes();
+  setupFaq();
   setupChrome();
   setupScrollSpy();
   setupRevealAnimations();
 
-  refreshLiveRates().then(() => updateBankRates("USD"));
+  refreshLiveRates();
   refreshCrypto();
   loadHistoricalChart(currentChartDays);
 
   setInterval(refreshLiveRates, REFRESH_MS);
   setInterval(refreshCrypto, REFRESH_MS);
 });
+// --- GeoExchange Animations Logic ---
+
+// გრაფიკის ხაზის თავიდან „დახატვის“ ტეგერი (გამოიძახე ტაბების შეცვლისას ან გრაფიკის რენდერისას)
+function triggerChartAnimation() {
+  const linePathEl = document.getElementById("chart-line-path");
+  if (linePathEl) {
+    linePathEl.style.animation = 'none';
+    linePathEl.offsetHeight; // Trigger reflow
+    linePathEl.style.animation = 'drawChartLine 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+  }
+}
+
+// კონვერტორის შედეგის ტალღური ანიმაციის ტეგერი (გამოიძახე თანხის გამოთვლისას)
+function triggerResultPop(elementId = "calc-result") {
+  const resultEl = document.getElementById(elementId);
+  if (resultEl) {
+    resultEl.classList.remove('result-pop');
+    resultEl.offsetHeight; // Trigger reflow
+    resultEl.classList.add('result-pop');
+  }
+}

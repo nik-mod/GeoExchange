@@ -88,3 +88,580 @@ html {
   0% { transform: scale(0.94); opacity: 0.4; }
   100% { transform: scale(1); opacity: 1; }
 }
+#chart-line-path {
+  stroke-dasharray: 1500;
+  stroke-dashoffset: 1500;
+  animation: drawChartLine 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawChartLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* შიმერული ეფექტი იტვირთება მდგომარეობისთვის */
+@keyframes shimmerPulse {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer-effect {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(78, 222, 163, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
+  background-size: 200% 100%;
+  animation: shimmerPulse 1.8s infinite;
+}
+
+/* ბანკებისა და ფილიალების ბარათების ჰოვერ ნათება */
+.branch-card, .bank-row, .reveal-card {
+  will-change: transform, opacity, box-shadow;
+}
+
+.interactive-glow:hover {
+  box-shadow: 0 0 35px -5px rgba(78, 222, 163, 0.2);
+  border-color: rgba(78, 222, 163, 0.4);
+  transform: translateY(-3px);
+}
+
+/* კონვერტორის შედეგის ცვლილების ტალღური ანიმაცია */
+@keyframes resultPulse {
+  0% { transform: scale(1); color: #4edea3; }
+  50% { transform: scale(1.03); color: #6ffbbe; text-shadow: 0 0 15px rgba(78,222,163,0.5); }
+  100% { transform: scale(1); color: #4edea3; }
+}
+
+.result-pop {
+  animation: resultPulse 0.4s ease-in-out;
+}
+/* Accessibility & interaction polish */
+:focus-visible {
+  outline: 2px solid #4edea3;
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+#mobile-nav-drawer {
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
+}
+
+/* Explicit project breakpoints required by the assignment */
+@media (max-width: 1024px) {
+  header .h-20 { height: 4.5rem; }
+  main { padding-top: 4.5rem !important; }
+  #live-rates,
+  #converter,
+  #bank-comparison,
+  #analytics,
+  #branches,
+  #faq { scroll-margin-top: 84px; }
+}
+
+@media (max-width: 768px) {
+  #rate-ticker { justify-content: flex-start; }
+  #banks-table { min-width: 720px; }
+  #trend-svg { min-width: 620px; }
+}
+
+@media (max-width: 480px) {
+  body { overflow-x: hidden; }
+  #cookie-banner { max-height: 70vh; overflow-y: auto; }
+  #banks-table { min-width: 680px; }
+  .quick-amt-btn { min-height: 40px; }
+}
+
+@media (max-width: 320px) {
+  html { font-size: 15px; }
+  #banks-table { min-width: 650px; }
+  #mobile-nav-drawer { padding-left: 0.75rem; padding-right: 0.75rem; }
+}
+
+/* =========================================================
+   Mobile-first responsive pass — 320 / 480 / 768 / 1024
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+}
+
+body {
+  min-width: 0;
+  overflow-x: clip;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+input,
+select,
+button,
+textarea {
+  max-width: 100%;
+}
+
+/* Keep flexible children from forcing horizontal overflow. */
+main,
+main > div,
+section,
+section > div,
+#converter,
+#converter > div,
+#analytics > div,
+#bank-comparison > div {
+  min-width: 0;
+}
+
+#rate-ticker {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+#input-amount,
+#calc-result {
+  min-width: 0;
+}
+
+#select-from,
+#select-to {
+  flex: 0 0 auto;
+  max-width: 118px;
+}
+
+/* -------- Tablet / small laptop -------- */
+@media (max-width: 1024px) {
+  header .h-20 {
+    height: 4.5rem;
+  }
+
+  main {
+    padding-top: 4.5rem !important;
+  }
+
+  #live-rates,
+  #converter,
+  #bank-comparison,
+  #analytics,
+  #branches,
+  #faq {
+    scroll-margin-top: 84px;
+  }
+
+  #analytics .reveal-card {
+    overflow: hidden;
+  }
+}
+
+/* -------- Phone / portrait tablet -------- */
+@media (max-width: 768px) {
+  #rate-ticker {
+    justify-content: flex-start;
+  }
+
+  /* Use readable type instead of desktop display sizes. */
+  .text-headline-xl {
+    font-size: clamp(1.9rem, 8vw, 2.35rem) !important;
+    line-height: 1.14 !important;
+    letter-spacing: -0.025em !important;
+  }
+
+  .text-headline-lg {
+    font-size: clamp(1.45rem, 6.4vw, 1.85rem) !important;
+    line-height: 1.22 !important;
+  }
+
+  /* More sensible vertical rhythm on small screens. */
+  section.py-space-2xl,
+  footer.py-space-2xl {
+    padding-top: 2.25rem !important;
+    padding-bottom: 2.25rem !important;
+  }
+
+  section.py-space-3xl {
+    padding-top: 2.75rem !important;
+    padding-bottom: 2.75rem !important;
+  }
+
+  /* Bank controls occupy the full width. */
+  #bank-controls {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  #bank-curr-tabs {
+    flex: 1 1 220px;
+  }
+
+  #bank-curr-tabs .bank-tab-btn {
+    flex: 1 1 0;
+  }
+
+  #bank-search-wrap {
+    flex: 1 1 220px;
+    min-width: 0 !important;
+  }
+
+  /* Chart stays inside the viewport instead of creating a 620px canvas. */
+  #trend-svg {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  #chart-timeframe-tabs {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  #chart-timeframe-tabs .tf-tab-btn {
+    flex: 0 0 auto;
+    min-width: 3.25rem;
+  }
+}
+
+/* -------- Mobile -------- */
+@media (max-width: 640px) {
+  header .h-20 {
+    height: 4rem;
+    gap: 0.5rem;
+  }
+
+  header img {
+    height: 1.75rem !important;
+  }
+
+  main {
+    padding-top: 4rem !important;
+  }
+
+  #mobile-nav-drawer {
+    max-height: calc(100dvh - 4rem);
+  }
+
+  #live-rates,
+  #converter,
+  #bank-comparison,
+  #analytics,
+  #branches,
+  #faq {
+    scroll-margin-top: 74px;
+  }
+
+  /* Hero / converter */
+  #live-rates .lg\:col-span-7,
+  #live-rates .lg\:col-span-5 {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #converter > div {
+    padding: 1rem !important;
+    border-radius: 1rem !important;
+  }
+
+  #converter form > div.bg-surface-container {
+    padding: 0.875rem !important;
+  }
+
+  #select-from,
+  #select-to {
+    max-width: 108px;
+    font-size: 0.78rem !important;
+  }
+
+  #input-amount,
+  #calc-result {
+    font-size: 1.2rem !important;
+  }
+
+  /* The desktop table becomes clean stacked bank cards on phones. */
+  #banks-table {
+    min-width: 0 !important;
+    width: 100% !important;
+    display: block;
+  }
+
+  #banks-table thead {
+    display: none;
+  }
+
+  #banks-table-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  #banks-table .bank-row {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 0.75rem;
+    padding: 0.9rem;
+    border-radius: 1rem;
+    background: #171e37;
+    border: 1px solid rgba(134, 148, 138, 0.18);
+  }
+
+  #banks-table .bank-row td {
+    width: 100%;
+    min-width: 0;
+    padding: 0 !important;
+    border: 0;
+  }
+
+  #banks-table .bank-row td:first-child {
+    grid-column: 1 / -1;
+    display: flex !important;
+    align-items: center;
+    padding-bottom: 0.55rem !important;
+    border-bottom: 1px solid rgba(134, 148, 138, 0.16);
+  }
+
+  #banks-table .bank-row td:nth-child(2),
+  #banks-table .bank-row td:nth-child(3),
+  #banks-table .bank-row td:nth-child(4) {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  #banks-table .bank-row td:nth-child(2)::before,
+  #banks-table .bank-row td:nth-child(3)::before,
+  #banks-table .bank-row td:nth-child(4)::before {
+    font-family: "Noto Sans", sans-serif;
+    font-size: 0.68rem;
+    line-height: 1rem;
+    color: #bbcabf;
+    font-weight: 500;
+  }
+
+  #banks-table .bank-row td:nth-child(2)::before { content: "ყიდვა"; }
+  #banks-table .bank-row td:nth-child(3)::before { content: "გაყიდვა"; }
+  #banks-table .bank-row td:nth-child(4)::before { content: "სპრედი"; }
+
+  #banks-table .bank-row td:nth-child(5) {
+    grid-column: 1 / -1;
+    padding-top: 0.35rem !important;
+  }
+
+  #banks-table .bank-row td:nth-child(5) > span {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  /* Analytics */
+  #analytics .reveal-card {
+    padding: 1rem !important;
+  }
+
+  #chart-timeframe-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  #chart-timeframe-tabs .tf-tab-btn {
+    min-width: 0;
+    padding-left: 0.55rem !important;
+    padding-right: 0.55rem !important;
+  }
+
+  #chart-date-labels {
+    gap: 0.35rem;
+  }
+
+  #chart-date-labels span {
+    font-size: 0.64rem !important;
+  }
+
+  /* CTA and footer */
+  #subscribe-form button {
+    min-height: 44px;
+  }
+
+  footer .grid {
+    gap: 1.75rem !important;
+  }
+
+  #cookie-banner {
+    left: 0.75rem !important;
+    right: 0.75rem !important;
+    bottom: 0.75rem !important;
+    max-width: none !important;
+  }
+
+  #back-to-top-btn {
+    right: 0.75rem !important;
+    bottom: 0.75rem !important;
+    width: 2.75rem !important;
+    height: 2.75rem !important;
+  }
+}
+
+/* -------- 480px -------- */
+@media (max-width: 480px) {
+  body {
+    overflow-x: clip;
+  }
+
+  /* Mobile side margins: 14px gives 292px of real content at 320px. */
+  .px-layout-margin-mobile {
+    padding-left: 0.875rem !important;
+    padding-right: 0.875rem !important;
+  }
+
+  header .gap-space-md {
+    gap: 0.5rem !important;
+  }
+
+  #mobile-menu-btn {
+    flex: 0 0 auto;
+  }
+
+  #cookie-banner {
+    max-height: 72dvh;
+    overflow-y: auto;
+  }
+
+  .quick-amt-btn {
+    min-height: 40px;
+  }
+
+  #bank-controls {
+    flex-direction: column;
+  }
+
+  #bank-curr-tabs,
+  #bank-search-wrap {
+    width: 100%;
+    flex-basis: auto;
+  }
+
+  #bank-search-input {
+    min-height: 42px;
+  }
+
+  .branch-card {
+    padding: 1rem !important;
+  }
+}
+
+/* -------- 360px / 320px -------- */
+@media (max-width: 360px) {
+  /* Preserve useful room in the header. */
+  header a[data-path="live-rates"] span:last-child {
+    display: none;
+  }
+
+  header .font-headline-sm.text-headline-sm {
+    font-size: 1rem !important;
+  }
+
+  .text-headline-xl {
+    font-size: 1.75rem !important;
+    line-height: 1.16 !important;
+  }
+
+  .text-headline-lg {
+    font-size: 1.35rem !important;
+    line-height: 1.25 !important;
+  }
+
+  /* Hero telemetry is readable as a vertical list instead of 3 tiny tiles. */
+  #live-rates .grid.grid-cols-3 {
+    grid-template-columns: 1fr !important;
+  }
+
+  #live-rates .grid.grid-cols-3 > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem 0.85rem !important;
+  }
+
+  #live-rates .grid.grid-cols-3 > div > span:first-child {
+    margin-bottom: 0 !important;
+  }
+
+  #converter .quick-amt-btn {
+    flex: 1 1 calc(50% - 0.25rem);
+  }
+
+  #converter .quick-amt-btn:first-child {
+    margin-left: 0;
+  }
+
+  #converter .quick-amt-btn:last-child {
+    margin-right: 0;
+  }
+
+  #converter .flex.items-center.gap-space-xs.mb-space-md.overflow-x-auto {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+
+  #banks-table .bank-row {
+    grid-template-columns: 1fr;
+  }
+
+  #banks-table .bank-row td:nth-child(2),
+  #banks-table .bank-row td:nth-child(3),
+  #banks-table .bank-row td:nth-child(4),
+  #banks-table .bank-row td:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+
+  #banks-table .bank-row td:nth-child(2),
+  #banks-table .bank-row td:nth-child(3),
+  #banks-table .bank-row td:nth-child(4) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #cookie-banner > div:last-child {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #cookie-banner > div:last-child button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 320px) {
+  html {
+    font-size: 15px;
+  }
+
+  .px-layout-margin-mobile {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  #mobile-nav-drawer {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  #select-from,
+  #select-to {
+    max-width: 98px;
+  }
+}

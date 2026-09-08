@@ -2,23 +2,26 @@
 <html class="dark" lang="ka">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<title>GeoExchange — Live Currency Rates</title>
-
-<!-- Custom / reset styles -->
-<link rel="stylesheet" href="styles.css"/>
+<title>GeoExchange — NBG Currency Rates & Converter</title>
+<meta name="description" content="GeoExchange — NBG-ის ოფიციალურ კურსებზე დაფუძნებული ვალუტის კონვერტორი, ისტორიული გრაფიკი და ინდიკატური საბანკო შედარება."/>
+<meta name="theme-color" content="#0a122a"/>
+<link rel="icon" href="logo.svg" type="image/svg+xml"/>
 
 <!-- Tailwind CDN + external theme config -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="tailwind.config.js"></script>
+
+<!-- Custom styles load last so responsive overrides win -->
+<link rel="stylesheet" href="styles.css"/>
 </head>
 <body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex flex-col">
-<header class="fixed top-0 left-0 right-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.24)]"><div class="h-20 max-w-[1440px] mx-auto px-layout-margin-mobile md:px-layout-margin-tablet xl:px-layout-margin-desktop flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md flex-shrink-0"><img alt="GeoExchange Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VSoF-tAdOcCtU8Q2XMjAts6pdP4dpRCTp0KGzH_pmaoBtzHgtEu-5R-LRyJI0e5AqSpqjMFsI9kqiKSUYoMvAS9J6FF3olvq5oa0QA2A7bECyilV0XnO1Llcganl5wqrklUGyiapS7HK1moApSxLSv3s9eGofgvj3c0ByB99Nz4A6arTZnltGO-FXKlPxgShn7S1zprzo3kekXr3TRbKJtFHs_k6wXzIDahh09ZzN58erokqdIPA2o6A"/><a class="flex flex-col" data-path="live-rates" href="#live-rates"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-none">GeoExchange</span><span class="font-label-meta text-label-meta text-primary font-medium tracking-wide mt-space-2xs">ვალუტა+ • NBG Live</span></a></div><nav class="hidden xl:flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-primary font-semibold"><a aria-current="page" class="px-space-md py-space-xs rounded-lg transition-colors bg-surface-container-high text-primary font-semibold" data-path="live-rates" href="#live-rates">კურსები</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="converter" href="#converter">კონვერტორი</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="bank-comparison" href="#bank-comparison">ბანკების შედარება</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="analytics" href="#analytics">დიაგრამები</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="branches" href="#branches">ფილიალები</a></nav><div class="flex items-center gap-space-sm"><div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-2xs rounded-full border border-outline-variant/40"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span></span><span class="font-label-ticker text-label-ticker text-on-surface-variant uppercase tracking-wider">LIVE განახლება</span></div><a class="hidden md:inline-flex items-center justify-center bg-primary text-on-primary font-body-md text-body-md font-semibold px-space-lg py-space-xs rounded-lg shadow-[0_0_16px_-2px_rgba(16,185,129,0.35)] hover:bg-primary-container hover:text-on-primary transition-all" data-path="converter" href="#converter">კონვერტაცია</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><button aria-label="მენიუს გახსნა" class="xl:hidden p-space-xs rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" id="mobile-menu-btn"><span class="material-symbols-outlined">menu</span></button></div></div><div class="hidden xl:hidden bg-surface-container-low px-layout-margin-mobile py-space-md" id="mobile-nav-drawer"><nav class="flex flex-col gap-space-xs" data-active-classes="bg-surface-container-high text-primary font-semibold"><a aria-current="page" class="px-space-md py-space-sm rounded-lg transition-colors bg-surface-container-high text-primary font-semibold" data-path="live-rates" href="#live-rates">კურსები</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="converter" href="#converter">კონვერტორი</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="bank-comparison" href="#bank-comparison">ბანკების შედარება</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="analytics" href="#analytics">დიაგრამები</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="branches" href="#branches">ფილიალები</a></nav><div class="mt-space-md pt-space-sm flex flex-col gap-space-sm"><div class="flex items-center gap-space-xs px-space-xs"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span></span><span class="font-label-ticker text-label-ticker text-on-surface-variant uppercase">LIVE განახლება • NBG API</span></div><a class="w-full text-center bg-primary text-on-primary font-body-md text-body-md font-semibold py-space-sm rounded-lg hover:bg-primary-container hover:text-on-primary transition-all" data-path="converter" href="#converter">კონვერტაცია</a></div></div></header>
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.24)]"><div class="h-20 max-w-[1440px] mx-auto px-layout-margin-mobile md:px-layout-margin-tablet xl:px-layout-margin-desktop flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md flex-shrink-0"><img alt="GeoExchange Logo" class="h-8 w-auto object-contain" src="logo.svg"/><a class="flex flex-col" data-path="live-rates" href="#live-rates"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-none">GeoExchange</span><span class="font-label-meta text-label-meta text-primary font-medium tracking-wide mt-space-2xs">ვალუტა+ • NBG Live</span></a></div><nav class="hidden xl:flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-primary font-semibold"><a aria-current="page" class="px-space-md py-space-xs rounded-lg transition-colors bg-surface-container-high text-primary font-semibold" data-path="live-rates" href="#live-rates">კურსები</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="converter" href="#converter">კონვერტორი</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="bank-comparison" href="#bank-comparison">ბანკების შედარება</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="analytics" href="#analytics">დიაგრამები</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="branches" href="#branches">ფილიალები</a><a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="faq" href="#faq">კითხვები</a></nav><div class="flex items-center gap-space-sm"><div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-2xs rounded-full border border-outline-variant/40"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span></span><span class="font-label-ticker text-label-ticker text-on-surface-variant uppercase tracking-wider">LIVE განახლება</span></div><a class="hidden md:inline-flex items-center justify-center bg-primary text-on-primary font-body-md text-body-md font-semibold px-space-lg py-space-xs rounded-lg shadow-[0_0_16px_-2px_rgba(16,185,129,0.35)] hover:bg-primary-container hover:text-on-primary transition-all" data-path="converter" href="#converter">კონვერტაცია</a><button aria-label="მენიუს გახსნა" class="xl:hidden p-space-xs rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" id="mobile-menu-btn" aria-expanded="false" aria-controls="mobile-nav-drawer"><span class="material-symbols-outlined">menu</span></button></div></div><div class="hidden xl:hidden bg-surface-container-low px-layout-margin-mobile py-space-md" id="mobile-nav-drawer" aria-hidden="true"><nav class="flex flex-col gap-space-xs" data-active-classes="bg-surface-container-high text-primary font-semibold"><a aria-current="page" class="px-space-md py-space-sm rounded-lg transition-colors bg-surface-container-high text-primary font-semibold" data-path="live-rates" href="#live-rates">კურსები</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="converter" href="#converter">კონვერტორი</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="bank-comparison" href="#bank-comparison">ბანკების შედარება</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="analytics" href="#analytics">დიაგრამები</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="branches" href="#branches">ფილიალები</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="faq" href="#faq">კითხვები</a></nav><div class="mt-space-md pt-space-sm flex flex-col gap-space-sm"><div class="flex items-center gap-space-xs px-space-xs"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span></span><span class="font-label-ticker text-label-ticker text-on-surface-variant uppercase">LIVE განახლება • NBG API</span></div><a class="w-full text-center bg-primary text-on-primary font-body-md text-body-md font-semibold py-space-sm rounded-lg hover:bg-primary-container hover:text-on-primary transition-all" data-path="converter" href="#converter">კონვერტაცია</a></div></div></header>
 <main class="w-full pt-20 bg-surface flex-1">
 <div class="flex flex-col w-full">
 <!-- Live Rates Marquee / Ticker -->
@@ -75,7 +78,7 @@
           რეალური ვალუტის კურსები და <span class="text-primary">მყისიერი</span> კონვერტაცია
         </h1>
 <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl leading-relaxed">
-          საქართველოს ეროვნული ბანკის (NBG) ოფიციალური მონაცემები რეალურ დროში. გამოთვალეთ საუკეთესო კურსი საკომისიოს გარეშე.
+          საქართველოს ეროვნული ბანკის (NBG) ოფიციალურ კურსებზე დაფუძნებული მონაცემები. წყარო ავტომატურად მოწმდება ყოველ 60 წამში და კონვერტაცია საკომისიოს გარეშე ითვლება.
         </p>
 <!-- Quick Telemetry Stats -->
 <div class="grid grid-cols-3 gap-space-sm pt-space-sm max-w-lg">
@@ -110,7 +113,7 @@
 <button class="quick-amt-btn px-space-sm py-1 rounded bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-numeric text-body-sm transition-all" data-val="1000" type="button">1,000</button>
 <button class="quick-amt-btn px-space-sm py-1 rounded bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-numeric text-body-sm transition-all" data-val="5000" type="button">5,000</button>
 </div>
-<form class="space-y-space-md" id="calc-form" onsubmit="event.preventDefault()">
+<form class="space-y-space-md" id="calc-form" >
 <!-- Source Input Card -->
 <div class="bg-surface-container p-space-md rounded-xl">
 <div class="flex items-center justify-between text-on-surface-variant font-label-meta text-label-meta mb-space-2xs">
@@ -165,6 +168,18 @@
 </div>
 </div>
 </form>
+
+<!-- Conversion History Widget -->
+<div class="mt-space-md pt-space-md border-t border-outline-variant/30">
+<div class="flex items-center justify-between mb-2">
+<span class="font-label-meta text-label-meta text-on-surface-variant uppercase">ბოლო კონვერტაციები</span>
+<button id="clear-history-btn" class="text-body-sm text-primary hover:underline">გასუფთავება</button>
+</div>
+<div id="conversion-history-list" class="flex flex-col gap-2 max-h-32 overflow-y-auto no-scrollbar">
+<span class="text-body-sm text-on-surface-variant italic">ისტორია ცარიელია...</span>
+</div>
+</div>
+
 </div>
 </div>
 </div>
@@ -186,7 +201,7 @@
           </p>
 </div>
 <!-- Filter and Currency Tabs -->
-<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex flex-wrap items-center gap-space-sm" id="bank-controls">
 <!-- Currency Toggle -->
 <div class="inline-flex bg-surface-container-high p-1 rounded-xl" id="bank-curr-tabs">
 <button class="bank-tab-btn active px-space-md py-1 rounded-lg text-body-sm font-semibold bg-primary text-on-primary transition-colors" data-curr="USD">USD</button>
@@ -194,7 +209,7 @@
 <button class="bank-tab-btn px-space-md py-1 rounded-lg text-body-sm font-semibold text-on-surface-variant hover:text-on-surface transition-colors" data-curr="GBP">GBP</button>
 </div>
 <!-- Bank Search Input -->
-<div class="relative min-w-[200px]">
+<div class="relative min-w-[200px]" id="bank-search-wrap">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
 <input class="w-full pl-9 pr-3 py-1.5 bg-surface-container-high text-on-surface placeholder:text-on-surface-variant rounded-xl text-body-sm outline-none focus:bg-surface-container-highest" id="bank-search-input" placeholder="მოძებნე ბანკი..." type="text"/>
 </div>
@@ -306,7 +321,7 @@
 <div>
 <span class="font-label-ticker text-label-ticker text-primary uppercase">დინამიკის ანალიტიკა</span>
 <h3 class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">USD/GEL ბოლო პერიოდის ტრენდი</h3>
-<p class="font-body-md text-body-md text-on-surface-variant">რეალური ისტორიული მონაცემები NBG-ის API-დან</p>
+<p class="font-body-md text-body-md text-on-surface-variant">ისტორიული ოფიციალური მონაცემები NBG-ის API-დან</p>
 </div>
 <div class="inline-flex bg-surface-container-high p-1 rounded-xl w-fit" id="chart-timeframe-tabs">
 <button class="tf-tab-btn px-space-md py-1.5 rounded-lg text-body-sm font-semibold text-on-surface-variant hover:text-on-surface transition-colors" data-days="7">7დ</button>
@@ -375,7 +390,7 @@
 <div class="h-12 w-12 rounded-xl bg-surface-container-high text-primary flex items-center justify-center">
 <span class="material-symbols-outlined text-[28px]">bolt</span>
 </div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">რეალურ დროში API</h3>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">ავტომატური API განახლება</h3>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
             პირდაპირი ინტეგრაცია საქართველოს ეროვნულ ბანკთან. მონაცემები ავტომატურად ახლდება ყოველ წუთს.
           </p>
@@ -393,9 +408,9 @@
 <div class="h-12 w-12 rounded-xl bg-surface-container-high text-primary flex items-center justify-center">
 <span class="material-symbols-outlined text-[28px]">verified_user</span>
 </div>
-<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">100% დაცული ბაზა</h3>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">უსაფრთხო client-side გამოცდილება</h3>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-            არანაირი დაგვიანებული ან მანიპულირებული ციფრები. მხოლოდ ოფიციალური წყაროების ვალიდური კურსები.
+            კონვერტაციის ისტორია და cookie არჩევანი ინახება მხოლოდ თქვენს ბრაუზერში localStorage-ის მეშვეობით; სერვერზე პერსონალური მონაცემები არ იგზავნება.
           </p>
 </article>
 <article class="reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col items-start gap-space-md transition-transform hover:-translate-y-1">
@@ -404,14 +419,53 @@
 </div>
 <h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">კრიპტო ტიკერი</h3>
 <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-            BTC/USD ფასი პირდაპირ მოწოდებულია საბაზრო მონაცემთა API-დან, წამებში განახლებით.
+            BTC/USD ფასი მოწოდებულია CoinLore-ის საჯარო საბაზრო API-დან და ამ გვერდზე ყოველ 60 წამში ახლდება.
           </p>
 </article>
 </div>
 </div>
 </section>
+<!-- FAQ Section -->
+<section class="w-full py-space-2xl bg-surface" id="faq">
+<div class="max-w-[1440px] mx-auto px-layout-margin-mobile md:px-layout-margin-tablet xl:px-layout-margin-desktop">
+<div class="text-center max-w-2xl mx-auto mb-space-2xl reveal-card">
+<span class="font-label-ticker text-label-ticker text-primary uppercase tracking-widest">კითხვები და პასუხები</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">ხშირად დასმული კითხვები</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">ყველაფერი NBG-ის კურსების, სავალუტო სპრედებისა და კონვერტაციის შესახებ.</p>
+</div>
+<div class="max-w-3xl mx-auto space-y-space-md">
+<div class="faq-item reveal-card bg-surface-container-low rounded-xl p-space-md cursor-pointer border border-outline-variant/20 transition-all">
+<div class="flex items-center justify-between font-headline-sm text-on-surface">
+<span>როდის ახლდება ვალუტის კურსები საიტზე?</span>
+<span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</div>
+<div class="faq-content hidden mt-space-sm font-body-md text-on-surface-variant leading-relaxed">
+გვერდი NBG-ის საჯარო API-ს ყოველ 60 წამში ამოწმებს. თავად NBG-ის ოფიციალური გაცვლითი კურსი, როგორც წესი, დღიურად ქვეყნდება, ამიტომ მნიშვნელობა მხოლოდ ახალი ოფიციალური კურსის გამოქვეყნებისას იცვლება.
+</div>
+</div>
+<div class="faq-item reveal-card bg-surface-container-low rounded-xl p-space-md cursor-pointer border border-outline-variant/20 transition-all">
+<div class="flex items-center justify-between font-headline-sm text-on-surface">
+<span>რას ნიშნავს საბანკო სპრედი?</span>
+<span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</div>
+<div class="faq-content hidden mt-space-sm font-body-md text-on-surface-variant leading-relaxed">
+სპრედი არის სხვაობა კომერციული ბანკის მიერ ვალუტის ყიდვისა და გაყიდვის კურსებს შორის. ჩვენს ცხრილში მოცემულია ინდიკატური გაანგარიშებები NBG-ის ოფიციალურ კურსზე დაყრდნობით.
+</div>
+</div>
+<div class="faq-item reveal-card bg-surface-container-low rounded-xl p-space-md cursor-pointer border border-outline-variant/20 transition-all">
+<div class="flex items-center justify-between font-headline-sm text-on-surface">
+<span>არის თუ არა კონვერტაცია სრულიად უფასო?</span>
+<span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</div>
+<div class="faq-content hidden mt-space-sm font-body-md text-on-surface-variant leading-relaxed">
+დიახ, თავად კალკულატორი და პლატფორმა სრულიად უფასოა და იყენებს სუფთა ეროვნული ბანკის კურსს ყოველგვარი დამატებითი საკომისიოს გარეშე.
+</div>
+</div>
+</div>
+</div>
+</section>
 <!-- Rate Alert & Subscription (Call to Action) -->
-<section class="w-full py-space-3xl relative overflow-hidden">
+<section class="w-full py-space-3xl relative overflow-hidden bg-surface-container-lowest">
 <div class="max-w-[1440px] mx-auto px-layout-margin-mobile md:px-layout-margin-tablet xl:px-layout-margin-desktop">
 <div class="reveal-card bg-gradient-to-br from-surface-container-high via-surface-container to-surface-container-low p-space-xl md:p-space-2xl rounded-3xl relative overflow-hidden shadow-2xl">
 <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -426,7 +480,7 @@
 <p class="font-body-md text-body-md text-on-surface-variant mt-2 mb-space-lg">
             გამოიწერეთ ყოველდღიური დილის დაიჯესტი ან დააყენეთ შეტყობინება USD/GEL ან EUR/GEL-ის თქვენთვის სასურველ ნიშნულზე მიღწევისას.
           </p>
-<form class="flex flex-col sm:flex-row items-center gap-space-xs max-w-lg" id="subscribe-form" onsubmit="event.preventDefault()">
+<form class="flex flex-col sm:flex-row items-center gap-space-xs max-w-lg" id="subscribe-form" >
 <input class="w-full px-space-md py-space-sm rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant outline-none font-body-md text-body-md" id="sub-email-input" placeholder="თქვენი ელ-ფოსტის მისამართი..." required="" type="email"/>
 <button class="w-full sm:w-auto flex-shrink-0 bg-primary hover:bg-primary-container text-on-primary font-body-md text-body-md font-bold px-space-xl py-space-sm rounded-xl shadow-lg transition-all" id="sub-submit-btn" type="submit">
               გამოწერა
@@ -441,52 +495,53 @@
 </div>
 </section>
 <!-- Branch & Exchange Point Locator -->
-<section class="w-full py-space-2xl bg-surface-container-lowest" id="branches">
+<section class="w-full py-space-2xl bg-surface" id="branches">
 <div class="max-w-[1440px] mx-auto px-layout-margin-mobile md:px-layout-margin-tablet xl:px-layout-margin-desktop">
-<div class="text-center max-w-2xl mx-auto mb-space-2xl reveal-card">
+<div class="text-center max-w-2xl mx-auto mb-space-xl reveal-card">
 <span class="font-label-ticker text-label-ticker text-primary uppercase tracking-widest">ფილიალები</span>
-<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">პარტნიორი ბანკების ფილიალები</h2>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold mt-1">ბანკების ფილიალების საძიებო დემო</h2>
 <p class="font-body-md text-body-md text-on-surface-variant mt-2">საორიენტაციო მისამართები თბილისში. ვალუტის გადაცვლამდე გირჩევთ გადაამოწმოთ საათები და კურსი შესაბამისი ბანკის ოფიციალურ საიტზე.</p>
 </div>
+<!-- Branch Search Input -->
+<div class="max-w-md mx-auto mb-space-lg relative reveal-card">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-2xl mx-auto mb-space-md text-center">ქვემოთ მოცემული მისამართები სასწავლო დემო-მონაცემებია და რეალური ვიზიტის დაგეგმვამდე ბანკის ოფიციალურ არხზე გადაამოწმეთ.</p>
+<input id="branch-search-input" type="text" placeholder="მოძებნე ფილიალი ან ბანკი..." class="w-full pl-9 pr-3 py-2.5 bg-surface-container-high text-on-surface placeholder:text-on-surface-variant rounded-xl text-body-sm outline-none focus:bg-surface-container-highest shadow-inner"/>
+</div>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-lg" id="branches-grid">
-<article class="reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col gap-space-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+<article class="branch-card reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col gap-space-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl" data-name="თიბისი ბანკი tbc ცენტრალური ფილიალი რუსთაველი">
 <div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center font-bold text-primary">T</div><div><h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">თიბისი ბანკი</h3><span class="font-label-meta text-label-meta text-on-surface-variant">ცენტრალური ფილიალი</span></div></div>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">location_on</span>რუსთაველის გამზ. 4, თბილისი</p>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span>ორშ–პარ 09:30–19:00</p>
 </article>
-<article class="reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col gap-space-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+<article class="branch-card reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col gap-space-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl" data-name="საქართველოს ბანკი bog ვაკის ფილიალი ჭავჭავაძე">
 <div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center font-bold text-orange-400">B</div><div><h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">საქართველოს ბანკი</h3><span class="font-label-meta text-label-meta text-on-surface-variant">ვაკის ფილიალი</span></div></div>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">location_on</span>ჭავჭავაძის გამზ. 37, თბილისი</p>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span>ორშ–შაბ 09:00–20:00</p>
 </article>
-<article class="reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col gap-space-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+<article class="branch-card reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col gap-space-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl" data-name="ლიბერთი ბანკი liberty საბურთალოს ფილიალი ვაჟა-ფშაველა">
 <div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center font-bold text-red-400">L</div><div><h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">ლიბერთი ბანკი</h3><span class="font-label-meta text-label-meta text-on-surface-variant">საბურთალოს ფილიალი</span></div></div>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">location_on</span>ვაჟა-ფშაველას გამზ. 71, თბილისი</p>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span>ორშ–პარ 10:00–18:00</p>
 </article>
-<article class="reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col gap-space-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+<article class="branch-card reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col gap-space-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl" data-name="ბაზისბანკი basisbank ისნის ფილიალი წერეთელი">
 <div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center font-bold text-blue-400">BB</div><div><h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">ბაზისბანკი</h3><span class="font-label-meta text-label-meta text-on-surface-variant">ისნის ფილიალი</span></div></div>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">location_on</span>წერეთლის გამზ. 106, თბილისი</p>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span>ორშ–პარ 09:30–18:30</p>
 </article>
-<article class="reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col gap-space-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+<article class="branch-card reveal-card bg-surface-container-low p-space-lg rounded-2xl flex flex-col gap-space-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl" data-name="ქართუ ბანკი cartu დიდუბის ფილიალი ტბილისი">
 <div class="flex items-center gap-space-sm"><div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center font-bold text-amber-300">C</div><div><h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">ქართუ ბანკი</h3><span class="font-label-meta text-label-meta text-on-surface-variant">დიდუბის ფილიალი</span></div></div>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">location_on</span>ტბილისის გამზ. 22, თბილისი</p>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">schedule</span>ორშ–პარ 10:00–18:00</p>
-</article>
-<article class="reveal-card bg-gradient-to-br from-surface-container-high to-surface-container-low p-space-lg rounded-2xl flex flex-col justify-center items-center text-center gap-space-xs">
-<span class="material-symbols-outlined text-primary text-[32px]">map</span>
-<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">მეტი ფილიალი გჭირდებათ?</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">იხილეთ სრული ქსელი ბანკის ოფიციალურ ვებგვერდზე.</p>
 </article>
 </div>
 </div>
 </section>
 </div>
 </main>
-<footer class="w-full bg-surface-container-lowest py-space-2xl"><div class="max-w-[1440px] mx-auto px-layout-margin-mobile md:px-layout-margin-tablet xl:px-layout-margin-desktop"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl mb-space-2xl"><div><div class="flex items-center gap-space-xs mb-space-sm"><span class="font-headline-sm text-headline-sm text-on-surface font-bold">GeoExchange</span><span class="font-label-meta text-label-meta text-primary font-medium px-space-2xs py-0.5 rounded bg-surface-container-high">ვალუტა+</span></div><p class="font-body-md text-body-md text-on-surface-variant mb-space-md leading-relaxed">საქართველოს ეროვნული ბანკის ოფიციალური სავალუტო კურსების რეალურ დროში მონიტორინგი და ანალიტიკა.</p><div class="flex flex-wrap items-center gap-space-2xs text-on-surface-variant"><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">GEL</span><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">USD</span><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">EUR</span><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">GBP</span><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">TRY</span><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">CHF</span></div></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold mb-space-md">ნავიგაცია</h4><ul class="space-y-space-xs"><li class="list-none"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="live-rates" href="#live-rates">ცოცხალი კურსები (Live Rates)</a></li><li class="list-none"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="converter" href="#converter">ვალუტის კალკულატორი</a></li><li class="list-none"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="bank-comparison" href="#bank-comparison">ბანკების სპრედები და შედარება</a></li><li class="list-none"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="analytics" href="#analytics">ისტორიული დიაგრამები</a></li></ul></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold mb-space-md">მონაცემთა წყაროები</h4><div class="p-space-md bg-surface-container-low rounded-xl mb-space-sm"><div class="flex items-center gap-space-xs text-primary mb-space-2xs"><span class="material-symbols-outlined text-[20px]">verified</span><span class="font-label-ticker text-label-ticker">NBG ინტეგრაცია</span></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-normal">საქართველოს ეროვნული ბანკის საჯარო API-დან ოფიციალური, ყოველდღიურად განახლებადი კურსები.</p></div><p class="font-body-sm text-body-sm text-on-surface-variant">კრიპტო ტიკერი განახლდება საბაზრო API-დან ყოველ 60 წამში.</p></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold mb-space-md">კონტაქტი &amp; მხარდაჭერა</h4><div class="space-y-space-xs font-body-md text-body-md text-on-surface-variant"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[18px]">mail</span><span>support@geoexchange.ge</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[18px]">call</span><span>+995 (32) 2 100 200</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[18px]">location_on</span><span>თბილისი, ი. ჭავჭავაძის გამზ. 37</span></div></div></div></div><div class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md text-center md:text-left"><p class="font-body-sm text-body-sm text-on-surface-variant">© 2026 GeoExchange (ვალუტა+). ყველა უფლება დაცულია. მონაცემები საინფორმაციო ხასიათისაა.</p><div class="flex items-center gap-space-md"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">კონფიდენციალურობა</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">პირობები</a></div></div></div></footer>
+<footer class="w-full bg-surface-container-lowest py-space-2xl"><div class="max-w-[1440px] mx-auto px-layout-margin-mobile md:px-layout-margin-tablet xl:px-layout-margin-desktop"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl mb-space-2xl"><div><div class="flex items-center gap-space-xs mb-space-sm"><span class="font-headline-sm text-headline-sm text-on-surface font-bold">GeoExchange</span><span class="font-label-meta text-label-meta text-primary font-medium px-space-2xs py-0.5 rounded bg-surface-container-high">ვალუტა+</span></div><p class="font-body-md text-body-md text-on-surface-variant mb-space-md leading-relaxed">საქართველოს ეროვნული ბანკის ოფიციალურ კურსებზე დაფუძნებული მონიტორინგი, კონვერტაცია და ანალიტიკა.</p><div class="flex flex-wrap items-center gap-space-2xs text-on-surface-variant"><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">GEL</span><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">USD</span><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">EUR</span><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">GBP</span><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">TRY</span><span class="font-label-ticker text-label-ticker px-space-xs py-space-2xs bg-surface-container rounded">CHF</span></div></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold mb-space-md">ნავიგაცია</h4><ul class="space-y-space-xs"><li class="list-none"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="live-rates" href="#live-rates">ცოცხალი კურსები (Live Rates)</a></li><li class="list-none"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="converter" href="#converter">ვალუტის კალკულატორი</a></li><li class="list-none"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="bank-comparison" href="#bank-comparison">ბანკების სპრედები და შედარება</a></li><li class="list-none"><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="analytics" href="#analytics">ისტორიული დიაგრამები</a></li></ul></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold mb-space-md">მონაცემთა წყაროები</h4><div class="p-space-md bg-surface-container-low rounded-xl mb-space-sm"><div class="flex items-center gap-space-xs text-primary mb-space-2xs"><span class="material-symbols-outlined text-[20px]">verified</span><span class="font-label-ticker text-label-ticker">NBG ინტეგრაცია</span></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-normal">საქართველოს ეროვნული ბანკის საჯარო API-დან ოფიციალური კურსები; გვერდი წყაროს პერიოდულად ამოწმებს.</p></div><p class="font-body-sm text-body-sm text-on-surface-variant">კრიპტო ტიკერი განახლდება საბაზრო API-დან ყოველ 60 წამში.</p></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface font-semibold mb-space-md">პროექტის სტატუსი</h4><div class="space-y-space-xs font-body-md text-body-md text-on-surface-variant"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[18px]">school</span><span>სასწავლო Front-End პროექტი</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[18px]">code</span><span>HTML • CSS/Tailwind • JavaScript</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[18px]">database</span><span>NBG + CoinLore საჯარო API</span></div></div></div></div><div class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md text-center md:text-left"><p class="font-body-sm text-body-sm text-on-surface-variant">© 2026 GeoExchange (ვალუტა+). ყველა უფლება დაცულია. მონაცემები საინფორმაციო ხასიათისაა.</p><div class="flex items-center gap-space-md"><span class="font-body-sm text-body-sm text-on-surface-variant">დემო ვერსია • საინფორმაციო მიზნებისთვის</span></div></div></div></footer>
 <button aria-label="გვერდის დასაწყისში დაბრუნება" class="fixed bottom-space-lg right-space-lg z-40 h-12 w-12 rounded-full bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary shadow-[0_12px_32px_-4px_rgba(2,6,23,0.65)] flex items-center justify-center transition-all opacity-0 pointer-events-none" id="back-to-top-btn"><span class="material-symbols-outlined">arrow_upward</span></button>
-<div class="fixed bottom-space-md left-space-md right-space-md md:left-auto md:right-space-lg md:max-w-md z-50 p-space-md bg-surface-container-high text-on-surface rounded-xl shadow-[0_12px_32px_-4px_rgba(2,6,23,0.65)] flex flex-col gap-space-sm" id="cookie-banner"><div class="flex items-start justify-between gap-space-xs"><div class="flex items-center gap-space-xs text-primary"><span class="material-symbols-outlined text-[20px]">cookie</span><span class="font-headline-sm text-headline-sm">ქუქი-ფაილები</span></div><button aria-label="დახურვა" class="text-on-surface-variant hover:text-on-surface transition-colors" id="cookie-close-btn"><span class="material-symbols-outlined text-[20px]">close</span></button></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">პლატფორმა იყენებს ქუქი-ფაილებს მომხმარებლის გამოცდილების გასაუმჯობესებლად და ვალუტის პრეფერენციების შესანახად.</p><div class="flex items-center justify-end gap-space-xs pt-space-2xs"><button class="px-space-md py-space-2xs rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" id="cookie-reject-btn">უარყოფა</button><button class="px-space-md py-space-2xs rounded-lg font-body-sm text-body-sm font-semibold bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" id="cookie-accept-btn">თანხმობა</button></div></div>
+<div class="fixed bottom-space-md left-space-md right-space-md md:left-auto md:right-space-lg md:max-w-md z-50 p-space-md bg-surface-container-high text-on-surface rounded-xl shadow-[0_12px_32px_-4px_rgba(2,6,23,0.65)] flex flex-col gap-space-sm" id="cookie-banner"><div class="flex items-start justify-between gap-space-xs"><div class="flex items-center gap-space-xs text-primary"><span class="material-symbols-outlined text-[20px]">cookie</span><span class="font-headline-sm text-headline-sm">ქუქი-ფაილები</span></div><button aria-label="დახურვა" class="text-on-surface-variant hover:text-on-surface transition-colors" id="cookie-close-btn"><span class="material-symbols-outlined text-[20px]">close</span></button></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">ეს დემო ინახავს თქვენს cookie არჩევანს და კონვერტაციის ისტორიას მხოლოდ ბრაუზერის localStorage-ში. ანალიტიკური/სარეკლამო cookie-ები არ გამოიყენება.</p><div class="flex items-center justify-end gap-space-xs pt-space-2xs"><button class="px-space-md py-space-2xs rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" id="cookie-reject-btn">უარყოფა</button><button class="px-space-md py-space-2xs rounded-lg font-body-sm text-body-sm font-semibold bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary transition-colors" id="cookie-accept-btn">თანხმობა</button></div></div>
 
 <!-- External JS -->
 <script src="script.js"></script>
