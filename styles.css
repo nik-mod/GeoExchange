@@ -665,3 +665,29 @@ section > div,
     max-width: 98px;
   }
 }
+
+/* Search fields: keep the icon anchored inside the input at every breakpoint. */
+#bank-search-wrap,
+#branches .relative {
+  position: relative;
+}
+
+#bank-search-input,
+#branch-search-input {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+#bank-search-input::-webkit-search-cancel-button,
+#branch-search-input::-webkit-search-cancel-button {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+  #branch-search-input,
+  #bank-search-input {
+    font-size: 0.875rem;
+  }
+}
+

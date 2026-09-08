@@ -239,11 +239,19 @@ function convertCurrency(saveHistory = false) {
 }
 
 function setupConverter() {
+  const calcForm = document.getElementById("calc-form");
   const fromInput = document.getElementById("input-amount");
   const fromSelect = document.getElementById("select-from");
   const toSelect = document.getElementById("select-to");
   const swapBtn = document.getElementById("btn-swap-currencies");
   const clearHistoryBtn = document.getElementById("clear-history-btn");
+
+  if (calcForm) {
+    calcForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      convertCurrency(true);
+    });
+  }
 
   let historyTimer;
   const handleInput = () => {
@@ -298,6 +306,9 @@ function updateBankRates(currCode) {
   const rows = document.querySelectorAll(".bank-row");
   if (!rate) return;
 
+  const spreadValues = [...rows].map((row) => parseFloat(row.getAttribute("data-spread-pct")) || 0.02);
+  const lowestSpread = Math.min(...spreadValues);
+
   rows.forEach((row) => {
     const spreadPct = parseFloat(row.getAttribute("data-spread-pct")) || 0.02;
     const buy = rate.perUnit * (1 - spreadPct / 2);
@@ -305,9 +316,19 @@ function updateBankRates(currCode) {
     const buyEl = row.querySelector(".buy-val");
     const sellEl = row.querySelector(".sell-val");
     const spreadEl = row.querySelector(".spread-val");
+    const statusEl = row.querySelector(".bank-status");
+
     if (buyEl) buyEl.textContent = `${fmt(buy)} ₾`;
     if (sellEl) sellEl.textContent = `${fmt(sell)} ₾`;
     if (spreadEl) spreadEl.textContent = fmt(sell - buy);
+
+    if (statusEl) {
+      const isLowest = Math.abs(spreadPct - lowestSpread) < 0.000001;
+      statusEl.textContent = isLowest ? "დაბალი მარჟა" : "სტანდარტული";
+      statusEl.className = isLowest
+        ? "bank-status bg-primary/15 text-primary text-body-sm font-semibold px-space-sm py-1 rounded-full inline-flex items-center"
+        : "bank-status text-on-surface-variant text-body-sm font-semibold";
+    }
   });
 }
 
@@ -327,7 +348,7 @@ function setupBankTabs() {
 
   const searchInput = document.getElementById("bank-search-input");
   if (searchInput) {
-    searchInput.addEventListener("keyup", function () {
+    searchInput.addEventListener("input", function () {
       const query = this.value.toLowerCase().trim();
       document.querySelectorAll(".bank-row").forEach((row) => {
         const name = row.getAttribute("data-name").toLowerCase();
@@ -338,7 +359,7 @@ function setupBankTabs() {
 
   const branchSearchInput = document.getElementById("branch-search-input");
   if (branchSearchInput) {
-    branchSearchInput.addEventListener("keyup", function() {
+    branchSearchInput.addEventListener("input", function() {
       const query = this.value.toLowerCase().trim();
       document.querySelectorAll(".branch-card").forEach((card) => {
         const name = card.getAttribute("data-name").toLowerCase();
@@ -578,14 +599,16 @@ function setupChrome() {
   const subSuccess = document.getElementById("sub-success-msg");
   const subBtn = document.getElementById("sub-submit-btn");
   if (subForm && subSuccess) {
+    const input = document.getElementById("sub-email-input");
+    const savedEmail = localStorage.getItem("geoexchange_subscription_email");
+    if (input && savedEmail) {
+      input.value = savedEmail;
+    }
+
     subForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const input = document.getElementById("sub-email-input");
       if (input && input.checkValidity() && input.value.trim()) {
         localStorage.setItem("geoexchange_subscription_email", input.value.trim());
-        subBtn.disabled = true;
-        subBtn.classList.add("hidden");
-        input.disabled = true;
         subSuccess.classList.remove("hidden");
       } else if (input) {
         input.reportValidity();
